@@ -2,9 +2,9 @@ import torch
 from torch import nn
 from torch.nn import CrossEntropyLoss
 
-from transformers.modeling_bert import ACT2FN, BertLayerNorm
-from transformers.modeling_bert import BertForMaskedLM
-from transformers.configuration_bert import BertConfig
+from transformers.models.bert.modeling_bert import ACT2FN
+from transformers.models.bert.modeling_bert import BertForMaskedLM
+from transformers.models.bert.configuration_bert import BertConfig
 from models.custom_criterion import CustomAdaptiveLogSoftmax
 
 
@@ -37,6 +37,9 @@ class TabFormerBertPredictionHeadTransform(nn.Module):
             self.transform_act_fn = ACT2FN[config.hidden_act]
         else:
             self.transform_act_fn = config.hidden_act
+
+        BertLayerNorm = torch.nn.LayerNorm
+
         self.LayerNorm = BertLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
 
     def forward(self, hidden_states):
